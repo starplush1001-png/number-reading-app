@@ -3,12 +3,58 @@
 <head>
   <meta charset="UTF-8">
   <title>ランダム数字読み上げ</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #ffffff;
+      color: #000000;
+      text-align: center;
+      padding: 20px;
+    }
+
+    h2 {
+      font-size: 28px;
+    }
+
+    label {
+      font-size: 22px;
+    }
+
+    input[type="number"] {
+      font-size: 24px;
+      width: 100px;
+      text-align: center;
+      margin-left: 8px;
+    }
+
+    input[type="checkbox"] {
+      transform: scale(1.6);
+      margin-right: 8px;
+    }
+
+    button {
+      font-size: 26px;
+      padding: 14px 28px;
+      margin-top: 20px;
+      border-radius: 12px;
+    }
+
+    #result {
+      margin-top: 30px;
+      font-size: 48px;
+      font-weight: bold;
+      letter-spacing: 6px;
+    }
+  </style>
 </head>
 <body>
-  <h2>ランダム数字生成 & 読み上げ</h2>
+
+  <h2>ランダム数字読み上げ</h2>
 
   <label>
-    桁数：
+    桁数
     <input type="number" id="digit" min="1" value="6">
   </label>
 
@@ -23,8 +69,7 @@
 
   <button onclick="generateNumber()">生成して読み上げ</button>
 
-  <h3>表示結果</h3>
-  <div id="result" style="font-size: 24px;"></div>
+  <div id="result"></div>
 
   <script>
     function generateNumber() {
@@ -38,20 +83,18 @@
         let n;
         do {
           n = Math.floor(Math.random() * 10);
-        } while (n === prev); // 直前と同じならやり直し
+        } while (n === prev);
 
         number += n;
         prev = n;
       }
 
-      // 表示用
       const displayNumber = reverseDisplay
         ? number.split("").reverse().join("")
         : number;
 
       document.getElementById("result").textContent = displayNumber;
 
-      // 表示結果を右から読み上げ
       speakFromRight(displayNumber);
     }
 
@@ -69,5 +112,6 @@
       speechSynthesis.speak(utterance);
     }
   </script>
+
 </body>
 </html>
