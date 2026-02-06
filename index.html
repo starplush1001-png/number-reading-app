@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>ランダム数字読み上げ</title>
+</head>
+<body>
+  <h2>ランダム数字生成 & 読み上げ</h2>
+
+  <label>
+    桁数：
+    <input type="number" id="digit" min="1" value="6">
+  </label>
+
+  <br><br>
+
+  <label>
+    <input type="checkbox" id="reverse" checked>
+    表示を後ろから読む
+  </label>
+
+  <br><br>
+
+  <button onclick="generateNumber()">生成して読み上げ</button>
+
+  <h3>表示結果</h3>
+  <div id="result" style="font-size: 24px;"></div>
+
+  <script>
+    function generateNumber() {
+      const digit = document.getElementById("digit").value;
+      const reverseDisplay = document.getElementById("reverse").checked;
+
+      let number = "";
+      let prev = null;
+
+      for (let i = 0; i < digit; i++) {
+        let n;
+        do {
+          n = Math.floor(Math.random() * 10);
+        } while (n === prev); // 直前と同じならやり直し
+
+        number += n;
+        prev = n;
+      }
+
+      // 表示用
+      const displayNumber = reverseDisplay
+        ? number.split("").reverse().join("")
+        : number;
+
+      document.getElementById("result").textContent = displayNumber;
+
+      // 表示結果を右から読み上げ
+      speakFromRight(displayNumber);
+    }
+
+    function speakFromRight(displayNumber) {
+      speechSynthesis.cancel();
+
+      const chars = displayNumber.split("").reverse();
+      const map = ["ゼロ","いち","に","さん","よん","ご","ろく","なな","はち","きゅう"];
+      const text = chars.map(n => map[n]).join(" ");
+
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = "ja-JP";
+      utterance.rate = 1.0;
+
+      speechSynthesis.speak(utterance);
+    }
+  </script>
+</body>
+</html>
