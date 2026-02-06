@@ -24,9 +24,9 @@
 
     input[type="number"] {
       font-size: 24px;
-      width: 100px;
+      width: 80px;
       text-align: center;
-      margin-left: 8px;
+      margin: 0 8px;
     }
 
     input[type="checkbox"] {
@@ -36,8 +36,9 @@
 
     button {
       font-size: 26px;
-      padding: 14px 28px;
-      margin-top: 20px;
+      padding: 12px 24px;
+      margin-top: 10px;
+      margin-right: 10px;
       border-radius: 12px;
     }
 
@@ -53,12 +54,16 @@
 
   <h2>ランダム数字読み上げ</h2>
 
-  <label>
-    桁数
-    <input type="number" id="digit" min="1" value="6">
-  </label>
+  <div>
+    <button onclick="changeDigit(-1)">−</button>
+    <label>
+      桁数
+      <input type="number" id="digit" min="1" value="6">
+    </label>
+    <button onclick="changeDigit(1)">＋</button>
+  </div>
 
-  <br><br>
+  <br>
 
   <label>
     <input type="checkbox" id="reverse" checked>
@@ -68,12 +73,23 @@
   <br><br>
 
   <button onclick="generateNumber()">生成して読み上げ</button>
+  <button onclick="replayNumber()">もう一度読み上げる</button>
 
   <div id="result"></div>
 
   <script>
+    let currentNumber = ""; // 現在表示中の数字を保持
+
+    function changeDigit(delta) {
+      const input = document.getElementById("digit");
+      let val = parseInt(input.value) || 1;
+      val += delta;
+      if (val < 1) val = 1;
+      input.value = val;
+    }
+
     function generateNumber() {
-      const digit = document.getElementById("digit").value;
+      const digit = parseInt(document.getElementById("digit").value) || 6;
       const reverseDisplay = document.getElementById("reverse").checked;
 
       let number = "";
@@ -83,19 +99,22 @@
         let n;
         do {
           n = Math.floor(Math.random() * 10);
-        } while (n === prev);
-
+        } while (n === prev); // 隣接数字を避ける
         number += n;
         prev = n;
       }
 
-      const displayNumber = reverseDisplay
-        ? number.split("").reverse().join("")
-        : number;
+      currentNumber = reverseDisplay ? number.split("").reverse().join("") : number;
 
-      document.getElementById("result").textContent = displayNumber;
+      document.getElementById("result").textContent = currentNumber;
 
-      speakFromRight(displayNumber);
+      speakFromRight(currentNumber);
+    }
+
+    function replayNumber() {
+      if (currentNumber) {
+        speakFromRight(currentNumber);
+      }
     }
 
     function speakFromRight(displayNumber) {
